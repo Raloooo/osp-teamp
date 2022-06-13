@@ -12,6 +12,7 @@ import random
 from selenium.webdriver.support.select import Select
 from elasticsearch import Elasticsearch
 from urllib.request import urlopen
+from html_table_parser import parser_function as parser # table crawling
 from bs4 import BeautifulSoup
 from flask import Flask, jsonify
 from flask import render_template
@@ -22,7 +23,7 @@ from selenium import webdriver as web #웹 자동클릭 구현 위한 WEBDRIVER 
 op = web.ChromeOptions()
 op.add_argument("no-sandbox")
 op.add_argument("--disable-dev-shm-usage")
-op.add_argument("headless")
+op.add_argument("headless") # 창 띄우지 않고 실행하기.
 op.add_argument("user-agent={Mozilla/5.0 (X11; Linux x86_64; rv:100.0) Gecko/20100101 Chrome/102.0.5005.61 Firefox/100.0}")
 
 
@@ -56,4 +57,9 @@ option.click();
 #selecting3.select_by_visible_text("글로벌소프트웨어융합전공");
 driver.find_element_by_css_selector('#btnSearch').click()
 
+html = driver.page_source #해당 사이트 정보 가져오기
+soup = BeautifulSoup(html, 'html.parser')
+data = soup.find('table', {'class' : 'gridHeaderTableDefault'})
+indata = parser.make2d(temp[1])
+print(indata)
 
