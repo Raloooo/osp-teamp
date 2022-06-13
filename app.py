@@ -9,6 +9,7 @@ import urllib.request
 import time
 import random
 
+from selenium.webdriver.support.select import Select
 from elasticsearch import Elasticsearch
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
@@ -21,6 +22,7 @@ from selenium import webdriver as web #웹 자동클릭 구현 위한 WEBDRIVER 
 op = web.ChromeOptions()
 op.add_argument("no-sandbox")
 op.add_argument("--disable-dev-shm-usage")
+op.add_argument("headless")
 op.add_argument("user-agent={Mozilla/5.0 (X11; Linux x86_64; rv:100.0) Gecko/20100101 Chrome/102.0.5005.61 Firefox/100.0}")
 
 
@@ -32,10 +34,26 @@ driver.get("https://knuin.knu.ac.kr/public/stddm/lectPlnInqr.knu")
 randtime = random.uniform(1,2)
 time.sleep(randtime)
 
-# 동적 드롭박스 클릭 과정
-driver.find_element(By.XPATH, '//*[@id="schSbjetCd1"]/option[6]').click() #elements가 아닌 element
-driver.find_element(By.XPATH, '//*[@id="schSbjetCd2"]/option[16]').click()
-driver.find_element(By.XPATH, '//*[@id="schSbjetCd3"]/option[2]').click()
-driver.find_element(By.CSS_SELECTOR, '#btnSearch').click()
+#dropbox click
+
+#driver.find_element_by_xpath('//*[@id="schSbjetCd1"]/option[6]').click() #elements가 아닌 element
+# driver.find_element_by_xpath('//*[@id="schSbjetCd2"]/option[16]').click()
+
+selecting = Select(driver.find_element_by_xpath('//*[@id="schSbjetCd1"]'))
+selecting.select_by_visible_text("대학");
+
+
+selecting2 = Select(driver.find_element_by_xpath('//*[@id="schSbjetCd2"]'))
+selecting2.select_by_visible_text("IT대학");
+
+
+driver.find_element_by_css_selector('#schSbjetCd3').click();
+option = driver.find_element_by_xpath("//*[text()='글로벌소프트웨어융합전공']")
+#driver.execute_script("arguments[0].scrollintoView();",option)
+option.click();
+
+#selecting3 = Select(driver.find_element_by_xpath('//*[@id="schSbjetCd3"]'))
+#selecting3.select_by_visible_text("글로벌소프트웨어융합전공");
+driver.find_element_by_css_selector('#btnSearch').click()
 
 
